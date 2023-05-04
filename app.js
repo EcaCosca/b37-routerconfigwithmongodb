@@ -25,49 +25,49 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // GET /users ⇒ return all users
-app.get('/users', (req,res)=>{
-    User.find({})
-    .then(module=> res.status(200).send(module))
-    .catch(err=>res.status(400).send(err))
-})
+// app.get('/users', (req,res)=>{
+//     User.find({})
+//     .then(module=> res.status(200).send(module))
+//     .catch(err=>res.status(400).send(err))
+// })
 
 // GET /users/:id ⇒ return a single user
-app.get('/users/:id', (req,res)=>{
-    User.find({"_id":req.params.id})
-    .then(module=> res.status(200).send(module))
-    .catch(err=>res.status(404).send(err))
-})
+// app.get('/users/:id', (req,res)=>{
+//     User.find({"_id":req.params.id})
+//     .then(module=> res.status(200).send(module))
+//     .catch(err=>res.status(404).send(err))
+// })
 
 // POST /users ⇒ create a new user
-app.post('/users', query('firstname').notEmpty(), query('lastname').notEmpty(), (req,res)=>{
-    const result = validationResult(req);
-    if (result.isEmpty()) {
-    //   return res.send(`Hello, ${req.query.firstname}!`);
-      res.send({ errors: result.array() });
-}
+// app.post('/users', query('firstname').notEmpty(), query('lastname').notEmpty(), (req,res)=>{
+//     const result = validationResult(req);
+//     if (result.isEmpty()) {
+//     //   return res.send(`Hello, ${req.query.firstname}!`);
+//       res.send({ errors: result.array() });
+// }
 
 
-User.create({firstname:req.body.firstname, lastname:req.body.lastname})
-.then(module=> res.status(200).send(module))
-.catch(err=>res.status(400).send(err))
+// User.create({firstname:req.body.firstname, lastname:req.body.lastname})
+// .then(module=> res.status(200).send(module))
+// .catch(err=>res.status(400).send(err))
 
-})
+// })
 
 // PUT /users/:id ⇒ update a specific user
-app.put('/users/:id', (req,res)=>{
-    if(!req.body.firstname || !req.body.firstname){
-        res.status(400).send(req.body)}
+// app.put('/users/:id', (req,res)=>{
+//     if(!req.body.firstname || !req.body.firstname){
+//         res.status(400).send(req.body)}
 
-    User.findOneAndUpdate({"_id":req.params.id}, { $set: {firstname:req.body.firstname, lastname:req.body.lastname}})
-    .then(module=> res.status(200).send(module))
-    .catch(err=>res.status(404).send(err))
-})
+//     User.findOneAndUpdate({"_id":req.params.id}, { $set: {firstname:req.body.firstname, lastname:req.body.lastname}})
+//     .then(module=> res.status(200).send(module))
+//     .catch(err=>res.status(404).send(err))
+// })
 
 // DELETE /users/:id ⇒ delete a specific user
-app.delete('/users/:id', (req,res)=>{
-    User.findOneAndDelete({"_id":req.params.id})
-    .then(module=> res.status(200).send(module))
-    .catch(err=>res.status(404).send(err))
-})
+// app.delete('/users/:id', (req,res)=>{
+//     User.findOneAndDelete({"_id":req.params.id})
+//     .then(module=> res.status(200).send(module))
+//     .catch(err=>res.status(404).send(err))
+// })
 
 app.listen(port, ()=>{console.log(`Server running on http://localhost:${port}/`);})

@@ -29,7 +29,7 @@ userSchema.pre('validate', function(next){
     next();
 })
 
-userSchema.pre("dave",async function(next) {
+userSchema.pre("save",async function(next) {
     try {
         const hashedPassword = await bcrypt.hash(this.password, 8)
         console.log("HASSHED PASSWORD", hashedPassword)
@@ -39,6 +39,6 @@ userSchema.pre("dave",async function(next) {
         console.log("ERROR", "HASHING ERROR");
         next(error)
     }
-});
+})
 
 module.exports = mongoose.model('User', userSchema);

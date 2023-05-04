@@ -11,7 +11,7 @@ const register = async (req, res) => {
         // Now this payload I am declaring will create a small package that will become part of my JWT ENCODED TOKEN along with my SECRET and my HEADER
         // https://jwt.io/
         const payload = {
-            _id:newUser._id,
+            _id: newUser._id,
             username: newUser.username,
             email: newUser.email,
         }
@@ -23,7 +23,7 @@ const register = async (req, res) => {
         const options = { httpOnly:true, expires: new Date(Date.now() + 9000000)}
         console.log("JWT TOKEN", userToken);
         res.status(201).cookie('userToken', userToken, options).json({user: payload})
-    }catch(err){
+    }catch(error){
         res.status(500).json({message: error.message, errors: error.errors})
     }
 };
@@ -35,7 +35,8 @@ const login = async (req, res) => {
         res.status(400).json({message:'invalid login attempt'})
     }else{
         try{
-            const isPasswordValid = await bcrypt.compare(req.body.password, userDocument)
+            const isPasswordValid = await bcrypt.compare(req.body.password, userDocument.password)
+            console.log(isPasswordValid);
             if(!isPasswordValid) {
                 res.status(400).json({ message: 'Invalid Login Attempt'});
             }else{
@@ -49,11 +50,16 @@ const login = async (req, res) => {
                 console.log("JWT TOKEN", userToken);
                 res.cookie('userToken', userToken, options).json({user: payload})
             }
-        }catch(err){
+        }catch(error){
+            console.log('object');
             res.status(500).json({message: error.message, errors: error.errors})
         }
     }
 };
+
+
+
+
 
 const logout = async (req, res) => {
     res.clearCookie('userToken');
