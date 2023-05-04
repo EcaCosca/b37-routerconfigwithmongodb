@@ -1,12 +1,21 @@
-require('dotenv').config()
-const express = require('express')
-const mongoose = require('mongoose')
-const User = require('./models/user')
-const app = express()
+require('dotenv').config();
+const express = require('express');
+const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
+const path = require('path');
+const User = require('./models/user');
+const authRouter = require('./routes/users')
+const { query, validationResult } = require('express-validator');
+const app = express();
+const cors = require('cors')
 
-const port = process.env.PORT
+const port = process.env.PORT || 8000
 
-app.use(express.json())
+app.use(cors());
+app.use(express.json());
+app.use(cookieParser());
+
+app.use('/auth', authRouter)
 
 // DB Connection
 mongoose.connect(process.env.MONGODBURI)
@@ -30,13 +39,18 @@ app.get('/users/:id', (req,res)=>{
 })
 
 // POST /users ⇒ create a new user
-app.post('/users', (req,res)=>{
-    if(!req.body.firstname || !req.body.firstname){
-    res.status(400).send(req.body)}
+app.post('/users', query('firstname').notEmpty(), query('lastname').notEmpty(), (req,res)=>{
+    const result = validationResult(req);
+    if (result.isEmpty()) {
+    //   return res.send(`Hello, ${req.query.firstname}!`);
+      res.send({ errors: result.array() });
+}
 
-    User.create({firstname:req.body.firstname, lastname:req.body.lastname})
-    .then(module=> res.status(200).send(module))
-    .catch(err=>res.status(400).send(err))
+
+User.create({firstname:req.body.firstname, lastname:req.body.lastname})
+.then(module=> res.status(200).send(module))
+.catch(err=>res.status(400).send(err))
+
 })
 
 // PUT /users/:id ⇒ update a specific user
